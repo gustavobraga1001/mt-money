@@ -1,15 +1,16 @@
 import * as Dialog from '@radix-ui/react-dialog'
+import * as z from 'zod'
 import { CloseButton, Content, Overlay, TransactionType, TransactionTypeButton } from './styles'
 import { ArrowCircleDown, ArrowCircleUp, X } from 'phosphor-react'
-import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { api } from '../../lib/axios'
 
 const newTransactionFormSchema = z.object({
   description: z.string(),
   price: z.number(),
   category: z.string(),
-  // type: z.enum(['income', 'outcome'])
+  type: z.enum(['income', 'outcome'])
 })
 
 type newTransactionFormInputs = z.infer<typeof newTransactionFormSchema>
@@ -20,15 +21,27 @@ export const NewTransactionModal = () => {
       handleSubmit,
       formState: {
         isSubmitting
-      }
+      },
+      reset
     } = useForm<newTransactionFormInputs>({
-    resolver: zodResolver(newTransactionFormSchema)
+    resolver: zodResolver(newTransactionFormSchema),
+    defaultValues: {
+      type: 'income'
+    }
   })
 
   async function handleCreateNewTransaction (data: newTransactionFormInputs) {
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    const { description, price, type, category  } = data
 
-    console.log(data)
+    await api.post('transactions', {
+      description,
+      price,
+      category,
+      type,
+      createdAt: new Date()
+    })
+
+    reset()
   }
 
   return (
