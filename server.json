@@ -23,6 +23,14 @@
       "type": "income",
       "createdAt": "2025-08-04T12:24:35.411Z",
       "id": 3
+    },
+    {
+      "description": "RocketSeat",
+      "price": 120,
+      "category": "Educação",
+      "type": "income",
+      "createdAt": "2025-08-07T11:39:25.896Z",
+      "id": 4
     }
   ]
 }
